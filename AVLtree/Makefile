@@ -1,8 +1,18 @@
-all: compile
-	g++ *.o -o test
+C=g++
+CFLAGS=-c -std=c++11
+LDFLAGS=
 
-compile:
-	g++ -c *.cpp
+SOURCES= AVLtree.cpp ../SimpleTree/SimpleTree.cpp ../SimpleTree/Container.cpp  main.cpp
+OBJECTS=$(SOURCES:.cpp=.o)
+
+all: test
+
+test: $(OBJECTS)
+	$(C) $(LDFLAGS) $(OBJECTS) -o $@
+
+.cpp.o:
+	$(C) $(CFLAGS) $<
 
 clean:
-	rm *.o test
+	rm -f *.o test *~
+	

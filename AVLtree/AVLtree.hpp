@@ -13,8 +13,7 @@ AVLtree();
 ~AVLtree();
 void insert(int value) override;
 void remove(int value) override;
-void printh();
-
+void print() override;
 protected:
 tree_element* insert_into_tree(tree_element* root, tree_element* elem);
 tree_element* create_tree_element(int i);
