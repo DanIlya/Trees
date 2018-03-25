@@ -1,5 +1,5 @@
 C=g++
-CFLAGS=-c -std=c++11
+CFLAGS=-c -std=c++11 -g
 LDFLAGS=
 
 SOURCES= AVLtree.cpp ../SimpleTree/SimpleTree.cpp ../SimpleTree/Container.cpp  main.cpp

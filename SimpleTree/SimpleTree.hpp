@@ -3,7 +3,7 @@
 
 #include "Container.hpp"
 
-typedef struct tree_element;
+struct tree_element;
 
 class SimpleTree: public Container
 {
