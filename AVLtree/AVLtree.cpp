@@ -31,6 +31,11 @@ tree_element* AVLtree::create_tree_element(int i)
     return p;
 }
 
+int AVLtree::geth()
+{
+    return this->root->h;
+}
+
 tree_element* AVLtree::balance_knot(tree_element* knot)
 {
     if (knot == NULL)
@@ -44,26 +49,54 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
     tree_element* dubl;
     tree_element* dubr;
     tree_element* dubright;
-    int hr, hl;
+    tree_element* dubrl;
+    int hr, hl, hrr, hrl, hll, hlr;
     if (knot->right == NULL)
         hr = 0;
     else
+    {
         hr = knot->right->h;
+	if (knot->right->left == NULL)
+	    hrl = 0;
+	else
+	    hrl = knot->right->left->h;
+
+	if (knot->right->right == NULL)
+	    hrr = 0;
+	else
+	    hrr = knot->right->right->h;
+	
+    }
 
     if (knot->left == NULL)
         hl = 0;
     else
+    {
         hl = knot->left->h;
+	if (knot->left->left == NULL)
+            hll = 0;
+        else
+            hll = knot->left->left->h;
 
+        if (knot->left->right == NULL)
+            hlr = 0;
+        else
+            hlr = knot->left->right->h;
+
+    }
 
     if (hr == hl +2)
     {
 
-        if (knot->right->left <= knot->right->right)
+        if (hrl <= hrr)
         {
             dub = knot->right;
             knot->right = knot->right->left;
             dub->left = knot;
+	    
+	    dub->h = hl + 2;
+	    dub->left->h = hl + 1;
+
             return dub;
         }
         else
@@ -71,24 +104,40 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             dubl = knot->right->left->left;
             dubr = knot->right->left->right;
             dubright = knot->right;
+	    dubrl = knot->right->left;
 
-            knot->right->left->left = knot;
-            knot->right->left->left->right = dubl;
-            knot->right->left->right = dubright;
-            knot->right->left->right->left = dubr;
+	    dubright->left = dubr;
+	    knot->right = dubl;
+	    dubrl->right = dubright;
+	    dubrl->left = knot;
+	    knot = dubrl;
+	    /*
+	    knot->right->left->right = knot->right;
+	    knot->right->left->left = knot;
+	    knot = knot->right->left;
+	    knot->right->left = dubr;
+	    knot->left->right = dubl;
+            */	    
+	    knot->h = maxpointer(knot->left, knot->right) + 1;
+	    knot->left->h = maxpointer(knot->left->left, knot->left->right) + 1;
+	    knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
 
-            return knot->right->left;
+            return knot;
         }
 
     }
     else if (hl == hr +2)
     {
 
-        if (knot->left->right <= knot->left->left)
+        if (hlr <= hll)
         {
             dub = knot->left;
             knot->left = knot->left->right;
             dub->right = knot;
+
+	    dub->h = hr + 2;
+            dub->right->h = hr + 1;
+
             return dub;
         }
         else
@@ -96,26 +145,39 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             dubr = knot->left->right->right;
             dubl = knot->left->right->left;
             dubright = knot->left;
+	    dubrl = knot->left->right;
 
+            dubright->right = dubl;
+            knot->left = dubr;
+            dubrl->left = dubright;
+            dubrl->right = knot;
+            knot = dubrl;
+   	    /*
+	    knot->left->right->left = knot->left;
             knot->left->right->right = knot;
-            knot->left->right->right->left = dubr;
-            knot->left->right->left = dubright;
-            knot->left->right->left->right = dubl;
+            knot = knot->left->right;
+            knot->left->right = dubl;
+            knot->right->left = dubr;          
+ 	    */
+	    knot->h = maxpointer(knot->left, knot->right) + 1;
+            knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
+            knot->left->h = maxpointer(knot->left->left, knot->left->right) + 1;
 
-            return knot->left->right;
+
+            return knot;
 
         }
     }
 
     if ((hl-hr)*(hl-hr) > 4)
     {
-        cout << "Something realy bad has happened to your tree (in elem->value = "<< knot->value << "."  << endl;
+        cout << "Something realy bad has happened to your tree (in elem->value = "<< knot->value << ")."  << endl;
         // << " You may use function Balance from AVLtree class to solve this problem." <<endl;
         return knot;
     }
     if ((hl-hr)*(hl-hr) < 4)
     {
-        //cout << "Knot (value = " << knot->value << ") is balanced." << endl;
+        cout << "Knot (value = " << knot->value << ") is balanced." << endl;
         return knot;
     }
 }
@@ -150,6 +212,7 @@ tree_element* AVLtree::insert_into_tree(tree_element* root, tree_element* elem)
     {
         //printf("Inserting into NULL\n");
         root = elem;
+	root->h = 1;
         return root;
     }
 
@@ -197,9 +260,10 @@ int AVLtree::maxpointer(tree_element* l, tree_element* r)
 
 void AVLtree::print()
 {
-    print_tree(this->root);
+    printh_tree(this->root);
 }
 
+//Для проверок всяких (выводит дерево с высотой каждого элемента)
 void AVLtree::printh_tree(tree_element* cur)
 {
     if (cur == NULL)

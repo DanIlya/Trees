@@ -12,6 +12,7 @@ AVLtree();
 void insert(int value) override;
 void remove(int value) override;
 void print() override;
+int geth();
 protected:
 //tree_element* Balance(tree_element* root);
 tree_element* balance_knot(tree_element* knot);
