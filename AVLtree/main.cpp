@@ -22,6 +22,16 @@ int main()
 	//tree->print(); 
     }
 
+    for (int i = 0; i < 500; i++)
+    {
+	v = rand() % 2000 - 1000;
+	if (tree->exists(v))
+	{
+	    cout << v << " exist. delete it. " << endl;
+	    tree->remove(v);
+	}
+    }
+
     int h = tree->geth();
     if(h <= 1.45*log2(2+1000))
  	cout << "Balance is OK" << endl;	 

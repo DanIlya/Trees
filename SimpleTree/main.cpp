@@ -7,14 +7,30 @@ using namespace std;
 int main()
 {
     Container* c = new SimpleTree();
-
-    for(int i = 1; i < 10; i++)
-        c->insert(i*i);
+    int v;
+    int i;
+    for(i = 0; i < 1000; i++)
+    {
+	v = rand() % 2000 - 1000;
+        c->insert(v);
+    }
 
     cout << "Tree after creation:" << endl;
     c->print();
 
-    cout << "Tree hight:" << endl;
+
+    for(i = 0; i < 500; i++)
+	{
+	v = rand() % 2000 - 1000;
+	if(c->exists(v))
+	    {
+		cout << v << " exists. delete it." << endl;
+		c->remove(v);
+	    }
+	}
+
+    cout << "Tree after deletion:" << endl;
+    c->print();
 
     delete c;
     return 0;

@@ -44,7 +44,7 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
         return NULL;
     }
 
-
+    //если написать это в сторчку то почему-то не компилится
     tree_element* dub;
     tree_element* dubl;
     tree_element* dubr;
@@ -111,15 +111,9 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
 	    dubrl->right = dubright;
 	    dubrl->left = knot;
 	    knot = dubrl;
-	    /*
-	    knot->right->left->right = knot->right;
-	    knot->right->left->left = knot;
-	    knot = knot->right->left;
-	    knot->right->left = dubr;
-	    knot->left->right = dubl;
-            */	    
-	    knot->h = maxpointer(knot->left, knot->right) + 1;
-	    knot->left->h = maxpointer(knot->left->left, knot->left->right) + 1;
+	    	    
+	    knot->h = hl + 2;
+	    knot->left->h = hl + 1;
 	    knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
 
             return knot;
@@ -152,15 +146,9 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             dubrl->left = dubright;
             dubrl->right = knot;
             knot = dubrl;
-   	    /*
-	    knot->left->right->left = knot->left;
-            knot->left->right->right = knot;
-            knot = knot->left->right;
-            knot->left->right = dubl;
-            knot->right->left = dubr;          
- 	    */
-	    knot->h = maxpointer(knot->left, knot->right) + 1;
-            knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
+   	
+	    knot->h = hr + 2;
+            knot->right->h = hr + 1;
             knot->left->h = maxpointer(knot->left->left, knot->left->right) + 1;
 
 
@@ -177,7 +165,7 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
     }
     if ((hl-hr)*(hl-hr) < 4)
     {
-        cout << "Knot (value = " << knot->value << ") is balanced." << endl;
+        //cout << "Knot (value = " << knot->value << ") is balanced." << endl;
         return knot;
     }
 }
