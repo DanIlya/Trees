@@ -68,17 +68,17 @@ tree_element* SimpleTree::search_by_value(tree_element* root, int value)
         return NULL;
     }
 
-    if (root->value == value)
+    else if (root->value == value)
     {
         //printf("Value found\n");
         return root;
     }
 
-    if (value < root->value)
+    else if (value < root->value)
     {
         root = search_by_value(root->left,value);
     }
-    if (value > root->value)
+    else if (value > root->value)
     {
         root = search_by_value(root->right,value);
     }
@@ -151,7 +151,8 @@ void SimpleTree::print()
 
 bool SimpleTree::exists(int value)
 {
-    if (search_by_value(this->root,value) != NULL)
+    tree_element* cur = this->root;
+    if (search_by_value(cur,value) != NULL)
         return 1;
     else
         return 0;
@@ -166,28 +167,28 @@ tree_element* SimpleTree::Umka (tree_element* root, tree_element* elem)
         return NULL;
     }
 
-    if (elem == NULL)
+    else if (elem == NULL)
     {
         //printf("Umka: elem = NULL\n");
         return NULL;
     }
 
-    if ((root->left == elem) | (root->right == elem))
+    else if ((root->left == elem) | (root->right == elem))
     {
         return root;
     }
 
-    if (elem == root)
+    else if (elem == root)
     {
         //printf("Your element is a root element, so he don't have any parents\n");
         return NULL;
     }
 
-    if (elem->value < root->value)
+    else if (elem->value < root->value)
     {
         root = Umka(root->left,elem);
     }
-    if (elem->value > root->value)
+    else if (elem->value > root->value)
     {
         root = Umka(root->right,elem);
     }
