@@ -27,7 +27,7 @@ tree_element* AVLtree::create_tree_element(int i)
     p ->value = i;
     p -> left = NULL;
     p->right = NULL;
-    p->h = 0;
+    p->h = 1;
     return p;
 }
 
@@ -161,6 +161,11 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
     {
         cout << "Something realy bad has happened to your tree (in elem->value = "<< knot->value << ")."  << endl;
         // << " You may use function Balance from AVLtree class to solve this problem." <<endl;
+	if (hl>hr)
+	     knot->left = balance_knot(knot->left);
+	else
+	    knot->right = balance_knot(knot->right);
+
         return knot;
     }
     if ((hl-hr)*(hl-hr) < 4)
@@ -189,6 +194,42 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
 }
 */
 
+
+bool AVLtree::Am_I_Truly_Balanced()
+{
+	if (bal(this->root))
+	{
+		cout << "I am balanced!" << endl;
+		return 1;
+	}
+	else
+	{
+		cout << "I am not balanced." << endl;
+		return 0;
+	}
+}
+
+bool AVLtree::bal(tree_element* knot)
+{
+	if (knot == NULL)
+		return 1;
+	else if ((knot->left == NULL) && (knot->right == NULL))
+		return 1;
+	else if ((knot->left == NULL) && (knot->right->h == 1))
+		return 1;
+	else if ((knot->right == NULL) && (knot->left->h == 1))
+		return 1;
+	else if ((knot->left == NULL) | (knot->right == NULL))
+		return 0;
+	else if ((knot->left->h - knot->right->h) * (knot->left->h - knot->right->h) > 1)
+		return 0;
+	else
+	{
+		return bal(knot->left)*bal(knot->right);
+	}
+
+}
+
 void AVLtree::insert(int value)
 {
     this->root = AVLtree::insert_into_tree(this->root, AVLtree::create_tree_element(value));
@@ -196,21 +237,21 @@ void AVLtree::insert(int value)
 
 tree_element* AVLtree::insert_into_tree(tree_element* root, tree_element* elem)
 {
-    if (root == NULL)
-    {
-        //printf("Inserting into NULL\n");
-        root = elem;
-	root->h = 1;
-        return root;
-    }
-
     if (elem == NULL)
     {
         //printf("Tree + NULL = Tree\n");
         return root;
     }
+ 
+    if (root == NULL)
+    {
+        //printf("Inserting into NULL\n");
+        root = elem;
+	root->h = elem->h;
+        return root;
+    }
 
-    if (elem->value < root->value)
+   if (elem->value < root->value)
     {
         root->left = AVLtree::insert_into_tree(root->left,elem);
     }
@@ -274,50 +315,75 @@ void AVLtree::printh_tree(tree_element* cur)
 
 void AVLtree::remove (int value)
 {
-    this->root = AVLtree::delete_from_tree(this->root, AVLtree::search_by_value(this->root, value));
+    this->root = AVLtree::delete_by_value(this->root, value);
 }
 
-// Костыль для remove
-tree_element* AVLtree::delete_from_tree(tree_element* root, tree_element* elem)
+tree_element* AVLtree::delete_by_value(tree_element* root, int value)
 {
-    if ((root == NULL) | (elem == NULL))
+
+
+    if (root == NULL)
     {
-        //cout << "Deleating error" << endl;
-        return root;
+        cout << value << " not found" << endl;
+        return 0;
     }
 
-    tree_element* parent = Umka(root,elem);
-    if (parent == NULL)
+    else if (root->value == value)
     {
-        //cout << "Root element was deleated" << endl;
-
-        root->right = insert_into_tree(root->right,root->left);
-        tree_element* Newroot = root->right;
-
-        free(root);
-        return Newroot;
+	tree_element* L = root->left;
+	tree_element* R = root->right;
+	free(root);
+	if (R == NULL)
+	{
+		return L;
+	}
+	else
+	{
+		tree_element* heir = find_heir(R);
+		heir->right = rm_heir(R);
+		heir->left = L;
+		heir->h = maxpointer(heir->left, heir->right) + 1; //вероятно это тоже не нужно 
+		//heir->right->h = maxpointer(heir->right->left, heir->right->right) + 1;
+        	return balance_knot(heir);
+	}
+	
     }
 
-    if ((elem->left == NULL) && (elem->right == NULL))
+    else if (value < root->value)
     {
-        if (elem->value < parent->value)
-            parent->left = NULL;
-        else
-            parent->right = NULL;
-
-        free(elem);
-        return root;
+	root->left = delete_by_value(root->left,value);
+    }
+    else if (value > root->value)
+    {
+        root->right = delete_by_value(root->right,value);
     }
 
+    return balance_knot(root);
+	
+}
 
-    if (elem->value < parent->value)
-        parent->left = elem->right;
-    else
-        parent->right = elem->right;
+tree_element* AVLtree::rm_heir(tree_element* knot)
+{
+	if (knot->left == NULL)
+		return knot->right;
+	knot->left = rm_heir(knot->left);
+	return balance_knot(knot);
+}
 
-    insert_into_tree(parent,elem->left);
+tree_element* AVLtree::find_heir(tree_element* knot)
+{
+	//вроде не нужно, но пусть будет
+	if (knot == NULL)
+	{
+		cout << "You gave NULL to find_heir!" << endl;
+		return NULL;
+	}
+	
+	if (knot->left != 0)
+        {
+                knot = find_heir(knot->left);
+        }
 
-    free(elem);
-    return root;
+	return knot;
 }
 
