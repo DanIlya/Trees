@@ -12,9 +12,9 @@ SimpleTree::SimpleTree()
 
 typedef struct tree_element
 {
-        int value;                      // Element value
-        struct tree_element* left;      // Pointer to left subtree
-        struct tree_element* right;     // Pointer to right subtree
+    int value;                      // Element value
+    struct tree_element* left;      // Pointer to left subtree
+    struct tree_element* right;     // Pointer to right subtree
 } tree_element;
 
 
@@ -22,7 +22,7 @@ typedef struct tree_element
 void SimpleTree::Burn_this_tree(tree_element* root)
 {
     if ((root->left == NULL) && (root->right == NULL))
-    free(root);
+        free(root);
     else
     {
         if (root->left != NULL)
@@ -48,11 +48,11 @@ SimpleTree::~SimpleTree()
 // Create new element, set its value to 'i', return pointer to new element
 tree_element* SimpleTree::create_tree_element(int i)
 {
-     tree_element* p =(tree_element*) malloc(sizeof(tree_element));
-     p ->value = i;
-     p -> left = NULL;
-     p->right = NULL;
-     return p;
+    tree_element* p =(tree_element*) malloc(sizeof(tree_element));
+    p ->value = i;
+    p -> left = NULL;
+    p->right = NULL;
+    return p;
 }
 
 
@@ -127,7 +127,7 @@ void SimpleTree::print_tree(tree_element* cur)
 {
     if (cur == NULL)
     {
-    //printf("I can not print root = NULL\n");
+        //printf("I can not print root = NULL\n");
     }
     else
     {
@@ -222,9 +222,9 @@ tree_element* SimpleTree::delete_from_tree(tree_element* root, tree_element* ele
     if ((elem->left == NULL) && (elem->right == NULL))
     {
         if (elem->value < parent->value)
-        parent->left = NULL;
+            parent->left = NULL;
         else
-        parent->right = NULL;
+            parent->right = NULL;
 
         free(elem);
         return root;
@@ -232,9 +232,9 @@ tree_element* SimpleTree::delete_from_tree(tree_element* root, tree_element* ele
 
 
     if (elem->value < parent->value)
-    parent->left = elem->right;
+        parent->left = elem->right;
     else
-    parent->right = elem->right;
+        parent->right = elem->right;
 
     insert_into_tree(parent,elem->left);
 
