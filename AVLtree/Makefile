@@ -1,18 +1,21 @@
 C=g++
 CFLAGS=-c -std=c++11 -g
-LDFLAGS=
+LDFLAGS=-lboost_unit_test_framework
 
-SOURCES= AVLtree.cpp ../SimpleTree/SimpleTree.cpp ../SimpleTree/Container.cpp  main.cpp
+SOURCES= AVLtree.cpp ../SimpleTree/SimpleTree.cpp ../SimpleTree/Container.cpp
 OBJECTS=$(SOURCES:.cpp=.o)
 
-all: test
+all: app tests
 
-test: $(OBJECTS)
-	$(C) $(LDFLAGS) $(OBJECTS) -o $@
+app: $(OBJECTS) main.o
+	$(C) $(LDFLAGS) $(OBJECTS) main.o -o $@
+
+tests: $(OBJECTS) tests.o
+	$(C) $(OBJECTS) tests.o $(LDFLAGS) -o $@
 
 .cpp.o:
 	$(C) $(CFLAGS) $<
 
 clean:
-	rm -f *.o test *~
+	rm -f *.o tests app
 	

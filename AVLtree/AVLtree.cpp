@@ -94,8 +94,10 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             knot->right = knot->right->left;
             dub->left = knot;
 
-            dub->h = hl + 2;
-            dub->left->h = hl + 1;
+            //dub->left->h = hl + 1;
+            dub->left->h = maxpointer(dub->left->left,dub->left->right) + 1;
+            //dub->h = hl + 2;
+            dub->h = maxpointer(dub->left,dub->right) + 1;
 
             return dub;
         }
@@ -112,10 +114,14 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             dubrl->left = knot;
             knot = dubrl;
 
-            knot->h = hl + 2;
-            knot->left->h = hl + 1;
+
+            //knot->left->h = hl + 1;
+            knot->left->h = maxpointer(knot->left->left, knot->left->right) +1 ;
+
             knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
 
+            //knot->h = hl + 2;
+            knot->h = maxpointer(knot->right, knot->left) + 1;
             return knot;
         }
 
@@ -129,9 +135,10 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             knot->left = knot->left->right;
             dub->right = knot;
 
-            dub->h = hr + 2;
-            dub->right->h = hr + 1;
-
+            //dub->right->h = hr + 1;
+            dub->right->h = maxpointer(dub->right->right,dub->right->left) + 1;
+            //dub->h = hr + 2;
+            dub->h = maxpointer(dub->right, dub->left) + 1;
             return dub;
         }
         else
@@ -147,10 +154,13 @@ tree_element* AVLtree::balance_knot(tree_element* knot)
             dubrl->right = knot;
             knot = dubrl;
 
-            knot->h = hr + 2;
-            knot->right->h = hr + 1;
+            //knot->right->h = hr + 1;
+            knot->right->h = maxpointer(knot->right->left, knot->right->right) + 1;
+
             knot->left->h = maxpointer(knot->left->left, knot->left->right) + 1;
 
+            //knot->h = hr + 2;
+            knot->h = maxpointer(knot->right, knot->left) + 1;
 
             return knot;
 
@@ -232,7 +242,7 @@ bool AVLtree::bal(tree_element* knot)
 
 void AVLtree::insert(int value)
 {
-    this->root = AVLtree::insert_into_tree(this->root, AVLtree::create_tree_element(value));
+    this->root = insert_into_tree(this->root, AVLtree::create_tree_element(value));
 }
 
 tree_element* AVLtree::insert_into_tree(tree_element* root, tree_element* elem)
@@ -253,15 +263,15 @@ tree_element* AVLtree::insert_into_tree(tree_element* root, tree_element* elem)
 
     if (elem->value < root->value)
     {
-        root->left = AVLtree::insert_into_tree(root->left,elem);
+        root->left = insert_into_tree(root->left,elem);
     }
     else
     {
-        root->right = AVLtree::insert_into_tree(root->right,elem);
+        root->right = insert_into_tree(root->right,elem);
     }
 
-    root = AVLtree::balance_knot(root);
-    root->h = AVLtree::maxpointer(root->left,root->right) + 1;
+    root = balance_knot(root);
+    root->h = maxpointer(root->left,root->right) + 1;
 
     return root;
 }
@@ -315,7 +325,7 @@ void AVLtree::printh_tree(tree_element* cur)
 
 void AVLtree::remove (int value)
 {
-    this->root = AVLtree::delete_by_value(this->root, value);
+    this->root = delete_by_value(this->root, value);
 }
 
 tree_element* AVLtree::delete_by_value(tree_element* root, int value)
@@ -340,9 +350,13 @@ tree_element* AVLtree::delete_by_value(tree_element* root, int value)
         else
         {
             tree_element* heir = find_heir(R);
+
             heir->right = rm_heir(R);
+
             heir->left = L;
+
             heir->h = maxpointer(heir->left, heir->right) + 1; //вероятно это тоже не нужно
+
             //heir->right->h = maxpointer(heir->right->left, heir->right->right) + 1;
             return balance_knot(heir);
         }
@@ -367,6 +381,7 @@ tree_element* AVLtree::rm_heir(tree_element* knot)
     if (knot->left == NULL)
         return knot->right;
     knot->left = rm_heir(knot->left);
+
     return balance_knot(knot);
 }
 
