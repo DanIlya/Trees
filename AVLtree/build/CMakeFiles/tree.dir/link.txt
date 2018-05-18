@@ -1,1 +1,0 @@
-/usr/bin/c++      CMakeFiles/tree.dir/main.cpp.o CMakeFiles/tree.dir/AVLtree.cpp.o  -o tree -rdynamic 

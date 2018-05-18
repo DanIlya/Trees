@@ -1,3 +1,0 @@
-/home/ilya/Documents/ClassProg/CppSampl/AVLtree/build/CMakeFiles/edit_cache.dir
-/home/ilya/Documents/ClassProg/CppSampl/AVLtree/build/CMakeFiles/rebuild_cache.dir
-/home/ilya/Documents/ClassProg/CppSampl/AVLtree/build/CMakeFiles/tree.dir
