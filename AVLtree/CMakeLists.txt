@@ -7,8 +7,8 @@ project(tree)
 # требования к компилятору
 set(CMAKE_CXX_STANDARD 11)
 
-file(GLOB SOURCES "*.cpp ../SimpleTree/Container.cpp ../SimpleTree/SimpleTree.cpp")
+file(GLOB SOURCES)
 
-add_executable(tree ${SOURCES})
+add_executable(tree ${SOURCES} *.cpp ../SimpleTree/Container.cpp ../SimpleTree/SimpleTree.cpp)
 
 
